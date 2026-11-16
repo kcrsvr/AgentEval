@@ -1,0 +1,67 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Test scenarios · Agent Eval";
+}
+
+<div class="studio-shell">
+    <header class="studio-header">
+        <a class="brand" asp-page="/Index"><span class="brand-mark">AE</span><span>Agent Eval</span></a>
+        <nav class="header-nav" aria-label="Main navigation">
+            <a href="/">Agents</a>
+            <a class="active" href="/Scenarios?agentId=rogers-roaming">Scenarios</a>
+        </nav>
+        <div class="header-meta"><span class="status-dot"></span> Evaluation workspace <span class="header-divider">/</span> Roaming Support Agent</div>
+    </header>
+    <main class="studio-main scenario-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb"><a asp-page="/Index">Agents</a><span>/</span><strong>Roaming Support Agent</strong></nav>
+        <section class="hero compact-hero">
+            <div class="eyebrow">AGENT · ROGERS ROAMING</div>
+            <h1>Test scenarios</h1>
+            <p>Save reusable test configurations, then view a conversation session with a defined turn budget.</p>
+        </section>
+
+        @if (Model.Notice is not null)
+        {
+            <div class="validation-banner" role="status"><span class="validation-icon">✓</span><div><strong>@Model.Notice</strong><p>Scenario changes are saved locally for this application instance.</p></div></div>
+        }
+
+        <section class="conversation-list-section">
+            <div class="list-section-heading">
+                <div><div class="section-overline">SAVED SCENARIOS <span>@Model.Scenarios.Count</span></div><h2>Roaming test cases</h2><p class="section-description">Starter scenarios cover trip recommendations, cruise travel, roaming support, international calling, and billing intent. Each run includes multiple conversation variations.</p></div>
+                <a class="primary-button" asp-page="/Scenarios/New" asp-route-agentId="rogers-roaming">＋ Add scenario</a>
+            </div>
+
+            @if (Model.Scenarios.Count == 0)
+            {
+                <div class="scenario-empty"><div class="empty-icon">＋</div><h3>No scenarios yet</h3><p>Add a comprehensive objective, a plain-text expected answer, and 2–5 multi-turn conversation previews.</p><a class="secondary-button" asp-page="/Scenarios/New" asp-route-agentId="rogers-roaming">Add your first scenario</a></div>
+            }
+            else
+            {
+                <div class="scenario-table">
+                    @foreach (var scenario in Model.Scenarios)
+                    {
+                        <article class="scenario-row">
+                            <div class="scenario-row-main">
+                                <span class="scenario-icon">◷</span>
+                                <div class="scenario-row-info"><h3>@scenario.Name</h3><p>@scenario.Objective</p><div class="scenario-meta"><span>Expected answer: @scenario.GroundTruth</span><span>@scenario.ConversationCount @(scenario.ConversationCount == 1 ? "conversation" : "conversations") per run</span><span>Max @scenario.MaxTurnsPerConversation back-and-forth turns each</span><span>Updated @scenario.UpdatedAt.ToLocalTime().ToString("MMM d, yyyy · h:mm tt")</span></div></div>
+                            </div>
+                            <div class="scenario-actions">
+                                <form method="post" asp-page-handler="View">
+                                    <input type="hidden" name="scenarioId" value="@scenario.Id" />
+                                    <button class="primary-button small-button" type="submit">View <span aria-hidden="true">→</span></button>
+                                </form>
+                                <a class="secondary-button small-button" asp-page="/Scenarios/New" asp-route-agentId="@scenario.AgentId" asp-route-id="@scenario.Id">Edit</a>
+                                <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Delete this scenario?');">
+                                    <input type="hidden" name="scenarioId" value="@scenario.Id" />
+                                    <button class="danger-button small-button" type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+        <footer class="studio-footer"><span>Agent Eval</span><span>Scenario library · File-based local storage</span></footer>
+    </main>
+</div>

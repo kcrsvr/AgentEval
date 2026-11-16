@@ -1,0 +1,43 @@
+# .NET build and test output
+**/bin/
+**/obj/
+**/artifacts/
+**/TestResults/
+**/publish/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.vspscc
+*.vssscc
+*.nupkg
+*.snupkg
+*.coverage
+*.coveragexml
+
+# Local IDE state (shared VS Code launch and task configuration is retained)
+.vs/
+.vscode/.ropeproject/
+.vscode/settings.json
+.idea/
+
+# Local credentials and environment configuration
+.env
+.env.*
+!.env.example
+secrets.json
+appsettings.*.local.json
+*.pfx
+*.p12
+*.key
+*.pem
+
+# Logs, temporary files, and OS metadata
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

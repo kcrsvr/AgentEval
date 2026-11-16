@@ -1,0 +1,48 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Agents · Agent Eval";
+}
+
+<div class="studio-shell">
+    <header class="studio-header">
+        <a class="brand" asp-page="/Index" aria-label="Agent Eval home">
+            <span class="brand-mark">AE</span><span>Agent Eval</span>
+        </a>
+        <nav class="header-nav" aria-label="Main navigation">
+            <a class="active" href="/">Agents</a>
+            <a href="/Scenarios?agentId=rogers-roaming">Scenarios</a>
+        </nav>
+    </header>
+
+    <main class="studio-main agents-main">
+        <section class="hero">
+            <div class="eyebrow">AGENT EVALUATION PLATFORM</div>
+            <h1>Choose an agent to test</h1>
+            <p>Create multi-turn customer conversations, run them against an agent, and review the conversation flow.</p>
+        </section>
+
+        <section class="agent-section" aria-labelledby="available-agents">
+            <div class="section-overline">AVAILABLE AGENTS <span>1</span></div>
+            <div class="agent-grid">
+                <article class="agent-card">
+                    <div class="agent-card-top">
+                        <div class="agent-avatar">R</div>
+                        <span class="agent-state"><span></span> Ready to configure</span>
+                    </div>
+                    <div class="agent-card-body">
+                        <div class="agent-category">CUSTOMER SUPPORT · WIRELESS</div>
+                        <h2 id="available-agents">Roaming Support Agent</h2>
+                        <p>Tests trip-planning conversations about roaming options, travel passes, cruise coverage, and related support.</p>
+                        <div class="agent-capabilities"><span>Multi-turn</span><span>Tool-grounded</span><span>English / French</span></div>
+                    </div>
+                    <a class="agent-select" asp-page="/Scenarios/Index" asp-route-agentId="rogers-roaming">
+                        <span>View scenarios &amp; configure tests</span><span aria-hidden="true">→</span>
+                    </a>
+                </article>
+            </div>
+        </section>
+
+        <footer class="studio-footer"><span>Agent Eval</span><span>Conversation testing workspace</span></footer>
+    </main>
+</div>

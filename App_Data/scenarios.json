@@ -1,0 +1,57 @@
+[
+  {
+    "Id": "c9460ee4-1f95-4135-9e33-0949225d2d45",
+    "AgentId": "rogers-roaming",
+    "Name": "Land \u00B7 cruise \u00B7 land roaming plan",
+    "Objective": "Test the cruise flow across land before, cruise ports and sea days, and land after. The assistant must collect the itinerary, line and ship, verify eligibility using its knowledge tool, confirm the trip, and only then recommend.\n\nCustomer scenario details for simulation:\nCustomer facts \u00B7 language: English\nCustomer facts \u00B7 travelOrder #1 \u00B7 type: land\nCustomer facts \u00B7 travelOrder #1 \u00B7 country: Japan\nCustomer facts \u00B7 travelOrder #1 \u00B7 places #1: Tokyo\nCustomer facts \u00B7 travelOrder #1 \u00B7 days: 3\nCustomer facts \u00B7 travelOrder #1 \u00B7 position: beforeCruise\nCustomer facts \u00B7 travelOrder #2 \u00B7 type: cruise\nCustomer facts \u00B7 travelOrder #2 \u00B7 cruiseLine: Princess Cruises\nCustomer facts \u00B7 travelOrder #2 \u00B7 ship: Diamond Princess\nCustomer facts \u00B7 travelOrder #2 \u00B7 daysTotal: 7\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #1 \u00B7 dayFrom: 1\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #1 \u00B7 dayTo: 1\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #1 \u00B7 type: port\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #1 \u00B7 country: Japan\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #1 \u00B7 place: Yokohama\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #1 \u00B7 note: boarding\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #2 \u00B7 dayFrom: 2\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #2 \u00B7 dayTo: 3\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #2 \u00B7 type: sea\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #2 \u00B7 days: 2\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #3 \u00B7 dayFrom: 4\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #3 \u00B7 dayTo: 4\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #3 \u00B7 type: port\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #3 \u00B7 country: Australia\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #3 \u00B7 place: Sydney\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #4 \u00B7 dayFrom: 5\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #4 \u00B7 dayTo: 6\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #4 \u00B7 type: sea\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #4 \u00B7 days: 2\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #5 \u00B7 dayFrom: 7\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #5 \u00B7 dayTo: 7\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #5 \u00B7 type: port\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #5 \u00B7 country: New Zealand\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #5 \u00B7 place: Auckland\nCustomer facts \u00B7 travelOrder #2 \u00B7 timeline #5 \u00B7 note: return\nCustomer facts \u00B7 travelOrder #3 \u00B7 type: land\nCustomer facts \u00B7 travelOrder #3 \u00B7 country: New Zealand\nCustomer facts \u00B7 travelOrder #3 \u00B7 places #1: Auckland\nCustomer facts \u00B7 travelOrder #3 \u00B7 days: 2\nCustomer facts \u00B7 travelOrder #3 \u00B7 position: afterCruise\nCustomer facts \u00B7 cruise: True\nCustomer facts \u00B7 returnsToCanada: True\nCustomer facts \u00B7 cruiseEligibility: unknown; must be checked with the agent\u0027s approved knowledge tool",
+    "GroundTruth": "No specific plan or price was supplied as expected ground truth for this starter scenario. Evaluate the stated behavior and require tool-grounded agent answers.",
+    "ConversationCount": 5,
+    "MaxTurnsPerConversation": 12,
+    "CreatedAt": "2026-11-15T19:19:59.229953+00:00",
+    "UpdatedAt": "2026-11-16T03:21:08.063622+00:00"
+  },
+  {
+    "Id": "8d28d2ff-c27e-4d39-b1e1-93e1531ea33c",
+    "AgentId": "rogers-roaming",
+    "Name": "Already aboard \u00B7 cruise roaming rates",
+    "Objective": "Test pricing while the customer is currently on a cruise: combine the relevant roaming knowledge and exact rate lookups, answer only the asked question, and do not estimate or fabricate amounts.\n\nCustomer scenario details for simulation:\nCustomer facts \u00B7 language: English\nCustomer facts \u00B7 travelStatus: currently aboard a cruise ship\nCustomer facts \u00B7 cruiseLine: unknown\nCustomer facts \u00B7 ship: unknown\nCustomer facts \u00B7 askedPricing: cruise roaming rates while at sea\nCustomer facts \u00B7 expectedTools #1: roaming_support_knowledge\nCustomer facts \u00B7 expectedTools #2: roaming_rates",
+    "GroundTruth": "No specific plan or price was supplied as expected ground truth for this starter scenario. Evaluate the stated behavior and require tool-grounded agent answers.",
+    "ConversationCount": 4,
+    "MaxTurnsPerConversation": 12,
+    "CreatedAt": "2026-11-15T19:19:59.230655+00:00",
+    "UpdatedAt": "2026-11-16T03:21:08.063661+00:00"
+  },
+  {
+    "Id": "181d4c7f-d9ea-4a89-be29-4f611f3bf58f",
+    "AgentId": "rogers-roaming",
+    "Name": "Europe multi-country itinerary",
+    "Objective": "Exercise a multi-country land itinerary: preserve countries and days separately, ask any required trip-flow questions in order, and avoid giving generic rates before itinerary confirmation.\n\nCustomer scenario details for simulation:\nCustomer facts \u00B7 language: English\nCustomer facts \u00B7 travelOrder #1 \u00B7 type: land\nCustomer facts \u00B7 travelOrder #1 \u00B7 country: Italy\nCustomer facts \u00B7 travelOrder #1 \u00B7 places #1: Rome\nCustomer facts \u00B7 travelOrder #1 \u00B7 days: 4\nCustomer facts \u00B7 travelOrder #1 \u00B7 position: destination\nCustomer facts \u00B7 travelOrder #2 \u00B7 type: land\nCustomer facts \u00B7 travelOrder #2 \u00B7 country: France\nCustomer facts \u00B7 travelOrder #2 \u00B7 places #1: Paris\nCustomer facts \u00B7 travelOrder #2 \u00B7 days: 3\nCustomer facts \u00B7 travelOrder #2 \u00B7 position: destination\nCustomer facts \u00B7 cruise: False\nCustomer facts \u00B7 returnsToCanada: True",
+    "GroundTruth": "No specific plan or price was supplied as expected ground truth for this starter scenario. Evaluate the stated behavior and require tool-grounded agent answers.",
+    "ConversationCount": 5,
+    "MaxTurnsPerConversation": 12,
+    "CreatedAt": "2026-11-15T19:19:59.22315+00:00",
+    "UpdatedAt": "2026-11-16T03:21:08.063662+00:00"
+  },
+  {
+    "Id": "bd4db673-9fef-4c4c-8ad5-d067e706b79f",
+    "AgentId": "rogers-roaming",
+    "Name": "India direct trip \u00B7 7 days",
+    "Objective": "You are a Rogers customer travelling to India for 7 days. Get the cheapest roaming rates for this scenario.\r\n\r\nCustomer scenario details for simulation:\r\nCustomer facts \u00B7 language: English\r\nCustomer facts \u00B7 travelOrder #1 \u00B7 type: land\r\nCustomer facts \u00B7 travelOrder #1 \u00B7 country: India\r\nCustomer facts \u00B7 travelOrder #1 \u00B7 places #1: Delhi\r\nCustomer facts \u00B7 travelOrder #1 \u00B7 days: 7\r\nCustomer facts \u00B7 travelOrder #1 \u00B7 position: destination\r\nCustomer facts \u00B7 cruise: False\r\nCustomer facts \u00B7 returnsToCanada: True",
+    "GroundTruth": "Asia Travel Plan, 14 days.",
+    "ConversationCount": 3,
+    "MaxTurnsPerConversation": 10,
+    "CreatedAt": "2026-11-15T19:19:59.222078+00:00",
+    "UpdatedAt": "2026-11-16T03:29:54.023943+00:00"
+  },
+  {
+    "Id": "fdcf63be-9204-4a1c-89e9-9f092f62e5ea",
+    "AgentId": "rogers-roaming",
+    "Name": "Japan stopover \u00B7 India destination",
+    "Objective": "Test whether the assistant retains a stopover and final destination as separate ordered land segments, asks only for missing details, and confirms the full itinerary before recommending.\r\n\r\nCustomer scenario details for simulation:\r\nCustomer facts \u00B7 language: English\r\nCustomer facts \u00B7 travelOrder #1 \u00B7 type: land\r\nCustomer facts \u00B7 travelOrder #1 \u00B7 country: Japan\r\nCustomer facts \u00B7 travelOrder #1 \u00B7 places #1: Tokyo\r\nCustomer facts \u00B7 travelOrder #1 \u00B7 days: 2\r\nCustomer facts \u00B7 travelOrder #1 \u00B7 position: stopover\r\nCustomer facts \u00B7 travelOrder #2 \u00B7 type: land\r\nCustomer facts \u00B7 travelOrder #2 \u00B7 country: India\r\nCustomer facts \u00B7 travelOrder #2 \u00B7 places #1: Delhi\r\nCustomer facts \u00B7 travelOrder #2 \u00B7 days: 8\r\nCustomer facts \u00B7 travelOrder #2 \u00B7 position: destination\r\nCustomer facts \u00B7 cruise: False\r\nCustomer facts \u00B7 returnsToCanada: True",
+    "GroundTruth": "Asia Travel Plan 14 days",
+    "ConversationCount": 4,
+    "MaxTurnsPerConversation": 12,
+    "CreatedAt": "2026-11-15T19:19:59.223128+00:00",
+    "UpdatedAt": "2026-11-16T03:22:43.758251+00:00"
+  }
+]

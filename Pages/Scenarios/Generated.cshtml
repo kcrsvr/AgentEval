@@ -1,0 +1,138 @@
+@page
+@model GeneratedModel
+@{
+    ViewData["Title"] = "Conversations · Agent Eval";
+}
+
+<div class="studio-shell">
+    <header class="studio-header">
+        <a class="brand" asp-page="/Index"><span class="brand-mark">AE</span><span>Agent Eval</span></a>
+        <nav class="header-nav" aria-label="Main navigation">
+            <a href="/">Agents</a>
+            <a class="active" href="/Scenarios?agentId=rogers-roaming">Scenarios</a>
+        </nav>
+    </header>
+    <main class="studio-main scenario-main">
+        @if (Model.Run is not null)
+        {
+            <nav class="breadcrumbs" aria-label="Breadcrumb"><a asp-page="/Index">Agents</a><span>/</span><a asp-page="/Scenarios/Index" asp-route-agentId="@Model.Run.AgentId">Roaming Support Agent</a><span>/</span><a asp-page="/Scenarios/Index" asp-route-agentId="@Model.Run.AgentId">Scenarios</a><span>/</span><strong>Conversation review</strong></nav>
+            <section class="hero compact-hero">
+                <div class="review-hero-row">
+                    <div>
+                        <div class="eyebrow">ROAMING SUPPORT AGENT · @Model.Run.Conversations.Count SESSIONS · MAX @Model.Run.MaxTurnsPerConversation BACK-AND-FORTH TURNS EACH</div>
+                        <h1>@Model.Run.ScenarioName</h1>
+                        <p>@Model.Run.Objective</p>
+                        <div class="evaluation-summary" aria-label="Run evaluation summary">
+                            <span class="evaluation-badge status-badge">@Model.Run.Status</span>
+                            @if (Model.Run.Status == "Completed" && Model.Run.Conversations.All(item => item.Evaluation is not null))
+                            {
+                                var passed = Model.Run.Conversations.All(item => item.Evaluation!.IsSuccess);
+                                var average = Model.Run.Conversations.Average(item => item.Evaluation!.Score);
+                                <span class="evaluation-badge @(passed ? "success-badge" : "fail-badge")">@(passed ? "Success" : "Fail")</span>
+                                <span class="evaluation-badge score-badge">Average score: @average.ToString("0.#") / 100</span>
+                                <small>All sessions must score at least @AgentEval.Models.AnswerEvaluation.SuccessThreshold / 100 to succeed.</small>
+                            }
+                            else if (Model.Run.Status == "Failed")
+                            {
+                                <small>Run evaluation is unavailable because a session failed.</small>
+                            }
+                            else
+                            {
+                                <small>Evaluation results appear when all sessions have finished.</small>
+                            }
+                        </div>
+                    </div>
+                    <form method="post" asp-page-handler="RunAll">
+                        <input type="hidden" name="runId" value="@Model.Run.Id" />
+                        <button class="primary-button run-all-button" type="submit" disabled="@(Model.Run.Conversations.Any(item => item.Status is "Queued" or "Running"))">Run all conversations <span aria-hidden="true">▶</span></button>
+                    </form>
+                </div>
+            </section>
+
+            <div class="ground-truth-reference"><strong>Expected ground truth</strong><p>@Model.Run.GroundTruth</p><small>Evaluation reference only — withheld from the customer simulator and local agent emulator.</small></div>
+
+                <div class="preview-notice"><span class="notice-symbol">i</span><div><strong>Run @Model.Run.Status · OpenAI customer simulator + local agent emulator</strong><p>Customer turns are generated from the scenario objective. Ground truth is withheld from both simulators and sent to OpenAI only to evaluate the last agent response. Scores are model judgments, not verified facts. The local policy simulation does not call Rogers or return fabricated rates, cruise eligibility, or knowledge-tool results.</p></div></div>
+            @if (!string.IsNullOrWhiteSpace(Model.Run.ErrorMessage))
+            {
+                <div class="validation-errors"><ul><li>@Model.Run.ErrorMessage</li></ul></div>
+            }
+
+            <section class="conversation-review-list" aria-label="Generated conversation previews">
+                @foreach (var conversation in Model.Run.Conversations)
+                {
+                    <article class="conversation-review-card">
+                        <div class="review-card-heading">
+                            <div class="conversation-index">@conversation.Number.ToString("00")</div>
+                            <div><div class="section-overline">CUSTOMER–AGENT DIALOGUE</div><h2>Agent Eval Conversation @(conversation.Number switch { 1 => "One", 2 => "Two", 3 => "Three", _ => conversation.Number.ToString() })</h2></div>
+                            <span class="preview-pill">@conversation.Status</span>
+                            <form method="post" asp-page-handler="RunConversation" class="run-session-form">
+                                <input type="hidden" name="runId" value="@Model.Run.Id" />
+                                <input type="hidden" name="number" value="@conversation.Number" />
+                                <button class="secondary-button run-session-button" type="submit" disabled="@(conversation.Status is "Queued" or "Running")">
+                                    @(conversation.Status is "Completed" or "TurnLimitReached" or "OutOfScope" ? "Run again" : "Run conversation") <span aria-hidden="true">▶</span>
+                                </button>
+                            </form>
+                        </div>
+                        @if (conversation.Evaluation is not null && conversation.Status is not ("Queued" or "Running"))
+                        {
+                            <div class="conversation-evaluation">
+                                <span class="evaluation-badge @(conversation.Evaluation.IsSuccess ? "success-badge" : "fail-badge")">@(conversation.Evaluation.IsSuccess ? "Success" : "Fail")</span>
+                                <span class="evaluation-badge score-badge">Score: @conversation.Evaluation.Score / 100</span>
+                                <p><strong>OpenAI evaluation:</strong> @conversation.Evaluation.Reason</p>
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(conversation.ErrorMessage))
+                        {
+                            <div class="conversation-evaluation"><p>@conversation.ErrorMessage</p></div>
+                        }
+                        <div class="dialogue-columns">
+                            <section class="dialogue-pane customer-pane" aria-label="Customer conversation">
+                                <div class="dialogue-pane-heading"><span class="role-icon customer-role">C</span><div><strong>Customer conversation</strong><small>OpenAI customer simulator</small></div></div>
+                                <div class="dialogue-transcript">
+                                    @{ var customerTurnNumber = 0; }
+                                    @foreach (var turn in conversation.Turns.Where(turn => turn.Role == "Customer"))
+                                    {
+                                        customerTurnNumber++;
+                                        <div class="dialogue-turn"><span>Customer turn @customerTurnNumber</span><p>@turn.Content</p></div>
+                                    }
+                                    @if (customerTurnNumber == 0 && conversation.Status == "Running")
+                                    {
+                                        <div class="dialogue-turn pending-dialogue-turn"><span>Starting</span><p>Generating the opening customer message…</p></div>
+                                    }
+                                </div>
+                            </section>
+                            <section class="dialogue-pane agent-pane" aria-label="Roaming agent response">
+                                <div class="dialogue-pane-heading"><span class="role-icon agent-role">R</span><div><strong>Roaming agent response</strong><small>Local policy-flow emulator</small></div></div>
+                                <div class="dialogue-transcript">
+                                    @{ var agentTurnNumber = 0; }
+                                    @foreach (var turn in conversation.Turns.Where(turn => turn.Role == "Roaming agent"))
+                                    {
+                                        agentTurnNumber++;
+                                        <div class="dialogue-turn agent-dialogue-turn"><span>Agent turn @agentTurnNumber · local simulation</span><p>@turn.Content</p></div>
+                                    }
+                                    @if (agentTurnNumber == 0 && conversation.Status == "Running")
+                                    {
+                                        <div class="dialogue-turn pending-dialogue-turn"><span>Waiting</span><p>The local agent emulator is waiting for the customer turn.</p></div>
+                                    }
+                                </div>
+                            </section>
+                        </div>
+                    </article>
+                }
+            </section>
+            <div class="detail-actions"><a class="secondary-button" asp-page="/Scenarios/Index" asp-route-agentId="@Model.Run.AgentId">← Back to scenarios</a></div>
+            <footer class="studio-footer"><span>Agent Eval</span><span>OpenAI customer generation · local agent emulation</span></footer>
+        }
+        else
+        {
+            <section class="empty-state"><h1>Run not found</h1><p>This preview may have expired when the application restarted.</p><a class="primary-button" asp-page="/Index">Back to agents</a></section>
+        }
+    </main>
+</div>
+
+@section Scripts {
+    @if (Model.Run is not null && (Model.Run.Status is "Queued" or "Running"))
+    {
+        <script>window.setTimeout(() => window.location.reload(), 2500);</script>
+    }
+}

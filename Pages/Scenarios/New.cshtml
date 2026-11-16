@@ -1,0 +1,94 @@
+@page
+@model NewModel
+@{
+    ViewData["Title"] = Model.IsEditing ? "Edit scenario · Agent Eval" : "New scenario · Agent Eval";
+}
+
+<div class="studio-shell">
+    <header class="studio-header">
+        <a class="brand" asp-page="/Index"><span class="brand-mark">AE</span><span>Agent Eval</span></a>
+        <nav class="header-nav" aria-label="Main navigation">
+            <a href="/">Agents</a>
+            <a class="active" href="/Scenarios?agentId=rogers-roaming">Scenarios</a>
+        </nav>
+        <div class="header-meta"><span class="status-dot"></span> Evaluation workspace <span class="header-divider">/</span> Roaming Support Agent</div>
+    </header>
+
+    <main class="studio-main scenario-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb"><a asp-page="/Index">Agents</a><span>/</span><a asp-page="/Scenarios/Index" asp-route-agentId="rogers-roaming">Roaming Support Agent</a><span>/</span><strong>@(Model.IsEditing ? "Edit scenario" : "New scenario")</strong></nav>
+        <section class="hero compact-hero">
+            <div class="eyebrow">ROAMING SUPPORT AGENT</div>
+            <h1>@(Model.IsEditing ? "Edit scenario" : "Set up a scenario")</h1>
+            <p>Write one complete scenario objective: include the customer role, trip details they know, intent, language, and target agent behavior.</p>
+        </section>
+
+        <div class="scenario-layout">
+            <section class="editor-card" aria-labelledby="scenario-heading">
+                    <div class="card-heading">
+                    <div class="step-number">01</div>
+                        <div><h2 id="scenario-heading">Scenario details</h2><p>Write a self-contained objective including the customer's goal and known trip details.</p></div>
+                </div>
+
+                <form method="post" class="scenario-form">
+                    <input asp-for="AgentId" type="hidden" />
+                    <input asp-for="ScenarioId" type="hidden" />
+                    <div asp-validation-summary="ModelOnly" class="validation-errors"></div>
+
+                    <div class="field-group">
+                        <label asp-for="ScenarioName">Scenario name</label>
+                        <input asp-for="ScenarioName" class="field-control" placeholder="e.g. India trip with a Japan stopover" maxlength="100" />
+                    </div>
+                    <div class="field-group">
+                        <label asp-for="Objective">Scenario objective</label>
+                        <textarea asp-for="Objective" class="field-control objective-input" rows="3" placeholder="What should this test evaluate?"></textarea>
+                        <span class="field-hint">Include the customer's intent, itinerary, language, facts they can answer with, and target agent behavior. This is the simulator's full scenario context.</span>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-group count-field">
+                            <label asp-for="ConversationCount">Number of conversations</label>
+                            <input asp-for="ConversationCount" class="field-control" type="number" min="2" max="5" />
+                            <span class="field-hint">Run this many independent conversation sessions.</span>
+                        </div>
+                        <div class="field-group count-field">
+                            <label asp-for="MaxTurnsPerConversation">Maximum back-and-forth turns</label>
+                            <input asp-for="MaxTurnsPerConversation" class="field-control" type="number" min="2" max="20" />
+                            <span class="field-hint">One turn is one customer message plus one agent response.</span>
+                        </div>
+                    </div>
+                    <div class="field-group ground-truth-group">
+                        <label asp-for="GroundTruth">Ground truth · expected recommendation</label>
+                        <textarea asp-for="GroundTruth" class="field-control objective-input" rows="4" placeholder="e.g. Asia Travel Plan, 14 days"></textarea>
+                        <span class="field-hint">Plain-text expected final plan or answer for later evaluation. This answer key is not sent to the customer simulator or roaming agent.</span>
+                    </div>
+                    <div class="form-footer">
+                        <span class="secure-note"><span aria-hidden="true">◈</span> Expected answer remains hidden during the conversation</span>
+                        <div class="form-actions">
+                            <a class="secondary-button" asp-page="/Scenarios/Index" asp-route-agentId="rogers-roaming">Cancel</a>
+                            <button class="secondary-button" type="submit" asp-page-handler="Save">Save scenario</button>
+                            <button class="primary-button" type="submit" asp-page-handler="Generate">Save &amp; view <span aria-hidden="true">→</span></button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <aside class="side-column">
+                <section class="side-card flow-card">
+                    <div class="side-card-heading"><span class="side-icon">◎</span><h2>What happens next</h2></div>
+                    <ol class="flow-list">
+                        <li><span>1</span><div><strong>Prepare conversations</strong><small>Use the comprehensive objective to simulate the customer.</small></div></li>
+                        <li><span>2</span><div><strong>Review the conversation panes</strong><small>Compare customer messages with agent responses.</small></div></li>
+                        <li><span>3</span><div><strong>Replay with the agent</strong><small>Agent replies require a configured gateway connection.</small></div></li>
+                    </ol>
+                </section>
+                <section class="side-card endpoint-card">
+                    <div class="side-card-heading"><span class="side-icon endpoint-icon">⌁</span><h2>Current connection status</h2></div>
+                    <div class="connection-row"><span class="connection-indicator @(Model.IsOpenAiConfigured ? "ready" : "pending")"></span><div><strong>OpenAI customer simulator</strong><small>@(Model.IsOpenAiConfigured ? "API key configured" : "Set OPENAI_API_KEY to enable runs")</small></div></div>
+                    <div class="connection-row"><span class="connection-indicator ready"></span><div><strong>Roaming agent</strong><small>Local policy-flow emulator · no Rogers endpoint call</small></div></div>
+                    <p class="connection-footnote">Customer turns are generated dynamically by OpenAI. Agent replies are a local approximation based on the provided flow rules; rates and knowledge tools remain unavailable and are never fabricated.</p>
+                </section>
+                <section class="guidance-card"><div class="guidance-tag">GROUND-TRUTH TIP</div><p>Capture the customer's itinerary, known answers, language, and expected agent behaviors. Keep rates and product eligibility for verified agent tools.</p></section>
+            </aside>
+        </div>
+        <footer class="studio-footer"><span>Agent Eval</span><span>Scenario setup</span></footer>
+    </main>
+</div>
